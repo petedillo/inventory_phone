@@ -1,48 +1,133 @@
-# Welcome to your Expo app 👋
+# Game Inventory Mobile App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A React Native mobile application that serves as a game companion app, connecting to a Node.js backend to manage game inventory with real-time updates using WebSockets.
 
-## Get started
+## Features
 
-1. Install dependencies
+- User management (create, select, delete)
+- Inventory management (add, edit, delete items)
+- Real-time updates via WebSockets
+- Dark/light mode support
+- Responsive UI for different device sizes
 
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v14 or later)
+- npm or yarn
+- Expo CLI (`npm install -g expo-cli`)
+- A running backend server (Node.js with Express, Socket.io)
+
+### Installation
+
+1. Clone the repository
+   ```bash
+   git clone <repository-url>
+   cd mobile-inventory
+   ```
+
+2. Install dependencies
    ```bash
    npm install
    ```
 
-2. Start the app
-
-   ```bash
-    npx expo start
+3. Configure the backend URL
+   
+   Open `services/api.ts` and `services/socket.ts` and update the URLs to point to your backend server:
+   ```typescript
+   // Replace with your actual backend server IP and port
+   const API_URL = 'http://YOUR_COMPUTER_IP:3000';
+   const SOCKET_URL = 'http://YOUR_COMPUTER_IP:3000';
    ```
 
-In the output, you'll find options to open the app in a
+4. Start the app
+   ```bash
+   npm start
+   ```
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+5. Use the Expo Go app on your device or an emulator to run the app
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### Troubleshooting
 
-## Get a fresh project
+#### WebSocket Connection Issues
 
-When you're ready, run:
+If you encounter WebSocket connection errors:
 
-```bash
-npm run reset-project
-```
+1. **Check your backend server URL**: Make sure you're using your computer's actual IP address, not 'localhost'
+   ```bash
+   # Find your IP address
+   ifconfig | grep "inet " | grep -v 127.0.0.1  # macOS/Linux
+   ipconfig                                      # Windows
+   ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2. **Verify network connectivity**: Ensure your device and computer are on the same network
 
-## Learn more
+3. **Check firewall settings**: Make sure your firewall isn't blocking connections to your backend port
+
+4. **Verify backend configuration**: Ensure your backend is configured to accept connections from external IPs
+   ```javascript
+   // In your Node.js server
+   const server = app.listen(3000, '0.0.0.0', () => {
+     console.log('Server running on port 3000');
+   });
+   ```
+
+5. **Check CORS settings**: Make sure your backend has proper CORS configuration
+   ```javascript
+   // In your Node.js server
+   const cors = require('cors');
+   app.use(cors());
+
+   // For Socket.io
+   const io = require('socket.io')(server, {
+     cors: {
+       origin: "*",
+       methods: ["GET", "POST"]
+     }
+   });
+   ```
+
+#### Items Not Displaying
+
+If items are not displaying in the inventory:
+
+1. **Check API response structure**: The API might be returning `Items` (capital I) instead of `items` (lowercase i)
+
+2. **Verify item creation**: Make sure items are being created successfully in the backend
+
+3. **Check WebSocket events**: Ensure WebSocket events are being received for item updates
+
+4. **Manual refresh**: Try using the pull-to-refresh gesture to manually refresh the inventory
+
+## Project Structure
+
+- `/app`: Main application screens and navigation
+- `/components`: Reusable UI components
+- `/context`: React Context for state management
+- `/services`: API and WebSocket services
+- `/constants`: App constants like colors and theme
+
+## Technologies Used
+
+- React Native with Expo
+- React Navigation
+- Axios for API requests
+- Socket.io for real-time updates
+- Context API for state management
+
+## Original Expo Documentation
+
+This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+
+### Learn more
 
 To learn more about developing your project with Expo, look at the following resources:
 
 - [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
 - [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
 
-## Join the community
+### Join the community
 
 Join our community of developers creating universal apps.
 
