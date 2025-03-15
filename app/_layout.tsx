@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { GameProvider } from '@/context/GameContext';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -28,12 +29,20 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <GameProvider>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="user/create" options={{ title: 'Create User' }} />
+          <Stack.Screen name="user/select" options={{ title: 'Select User' }} />
+          <Stack.Screen name="player" options={{ title: 'Player' }} />
+          <Stack.Screen name="inventory" options={{ title: 'Inventory' }} />
+          <Stack.Screen name="item/create" options={{ title: 'Add Item' }} />
+          <Stack.Screen name="item/edit" options={{ title: 'Edit Item' }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <StatusBar style="auto" />
+      </ThemeProvider>
+    </GameProvider>
   );
 }
