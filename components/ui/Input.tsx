@@ -16,7 +16,7 @@ interface InputProps extends TextInputProps {
   error?: string;
   containerStyle?: ViewStyle;
   labelStyle?: TextStyle;
-  inputStyle?: ViewStyle;
+  inputStyle?: TextStyle;
   errorStyle?: TextStyle;
 }
 
@@ -46,7 +46,7 @@ export const Input: React.FC<InputProps> = ({
           { 
             backgroundColor: colors.inputBackground,
             borderColor: error ? colors.error : isFocused ? colors.tint : colors.border,
-            color: colors.text,
+            color: colorScheme === 'dark' ? '#ffffff' : colors.text,
           },
           inputStyle,
         ]}

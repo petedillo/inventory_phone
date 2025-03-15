@@ -4,7 +4,7 @@
  */
 
 const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
+const tintColorDark = '#4cc9f0';
 
 export const Colors = {
   light: {
@@ -34,7 +34,7 @@ export const Colors = {
     error: '#ff5252',
     success: '#66bb6a',
     buttonDisabled: '#444444',
-    inputBackground: '#252525',
+    inputBackground: '#1a1a1a',
     placeholder: '#777777',
   },
 };
