@@ -25,11 +25,17 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
     const inAuthGroup = segments[0] === 'auth';
     
     if (!isAuthenticated && !inAuthGroup) {
-      // Redirect to auth flow if not authenticated and not already in auth flow
-      router.replace('/auth/welcome');
+      // Add a slight delay before navigation to ensure root layout is mounted
+      setTimeout(() => {
+        // Redirect to auth flow if not authenticated and not already in auth flow
+        router.replace('/auth/welcome');
+      }, 100);
     } else if (isAuthenticated && inAuthGroup) {
-      // Redirect to main app if authenticated and in auth flow
-      router.replace('/');
+      // Add a slight delay before navigation to ensure root layout is mounted
+      setTimeout(() => {
+        // Redirect to main app if authenticated and in auth flow
+        router.replace('/');
+      }, 100);
     }
   }, [isAuthenticated, isLoading, segments]);
   

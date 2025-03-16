@@ -196,8 +196,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setIsAuthenticated(true);
       setLastActivity(Date.now());
       
-      // Navigate to home screen
-      router.replace('/');
+      // Add a slight delay before navigation to ensure root layout is mounted
+      setTimeout(() => {
+        // Navigate to home screen
+        router.replace('/');
+      }, 100);
     } catch (error: any) {
       const errorMessage = error.response?.data?.error || 'Registration failed. Please try again.';
       Alert.alert('Registration Error', errorMessage);
@@ -220,8 +223,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setIsAuthenticated(true);
       setLastActivity(Date.now());
       
-      // Navigate to home screen
-      router.replace('/');
+      // Add a slight delay before navigation to ensure root layout is mounted
+      setTimeout(() => {
+        // Navigate to home screen
+        router.replace('/');
+      }, 100);
     } catch (error: any) {
       const errorMessage = error.response?.data?.error || 'Login failed. Please check your credentials.';
       Alert.alert('Login Error', errorMessage);
@@ -243,15 +249,23 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setUser(null);
       setIsAuthenticated(false);
       
-      // Navigate to login screen
-      router.replace('/auth/login');
+      // Add a slight delay before navigation to ensure root layout is mounted
+      setTimeout(() => {
+        // Navigate to login screen
+        router.replace('/auth/login');
+      }, 100);
     } catch (error) {
       console.error('Logout error:', error);
       
-      // Still update local state even if API call fails
+      // Still update auth state and navigate on error
       setUser(null);
       setIsAuthenticated(false);
-      router.replace('/auth/login');
+      
+      // Add a slight delay before navigation to ensure root layout is mounted
+      setTimeout(() => {
+        // Navigate to login screen
+        router.replace('/auth/login');
+      }, 100);
     } finally {
       setIsLoading(false);
     }
