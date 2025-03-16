@@ -1,7 +1,11 @@
 import axios from 'axios';
+import * as SecureStore from 'expo-secure-store';
 
 // Base URL for the API
-const API_URL = 'http://192.168.1.10:3000';
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.10:3000';
+
+// Key for access token
+const ACCESS_TOKEN_KEY = 'auth_access_token';
 
 // Create axios instance with base URL
 const api = axios.create({
@@ -10,6 +14,18 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+// Add request interceptor to include auth token
+api.interceptors.request.use(
+  async (config) => {
+    const token = await SecureStore.getItemAsync(ACCESS_TOKEN_KEY);
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 // User API endpoints
 export const userApi = {
