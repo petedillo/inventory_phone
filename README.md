@@ -32,14 +32,20 @@ A React Native mobile application that serves as a game companion app, connectin
    npm install
    ```
 
-3. Configure the backend URL
+3. Configure environment variables
    
-   Open `services/api.ts` and `services/socket.ts` and update the URLs to point to your backend server:
-   ```typescript
-   // Replace with your actual backend server IP and port
-   const API_URL = 'http://YOUR_COMPUTER_IP:3000';
-   const SOCKET_URL = 'http://YOUR_COMPUTER_IP:3000';
+   Create a `.env` file in the root directory with the following variables:
    ```
+   # Discord OAuth Configuration
+   EXPO_PUBLIC_DISCORD_CLIENT_ID=YOUR_DISCORD_CLIENT_ID_HERE
+   
+   # API Configuration
+   EXPO_PUBLIC_API_URL=http://YOUR_COMPUTER_IP:3000
+   ```
+   
+   Replace `YOUR_DISCORD_CLIENT_ID_HERE` with your actual Discord client ID from the [Discord Developer Portal](https://discord.com/developers/applications).
+   
+   Replace `YOUR_COMPUTER_IP` with your computer's IP address.
 
 4. Start the app
    ```bash

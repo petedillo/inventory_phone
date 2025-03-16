@@ -14,11 +14,6 @@ export default function HomeScreen() {
   const router = useRouter();
   const { currentUser, fetchUsers } = useGame();
   
-  // Fetch users when the component mounts
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-  
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
