@@ -9,13 +9,19 @@ import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Loading from '@/components/ui/Loading';
 import EmptyState from '@/components/ui/EmptyState';
+import ConnectionStatus from '@/components/ui/ConnectionStatus';
 import { useGame } from '@/context/GameContext';
 
 export default function PlayerScreen() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
   const router = useRouter();
-  const { currentUser, inventory, refreshInventory, loading } = useGame();
+  const { 
+    currentUser, 
+    inventory, 
+    refreshInventory, 
+    loading
+  } = useGame();
   
   // Refresh inventory when the component mounts
   useEffect(() => {
@@ -51,6 +57,10 @@ export default function PlayerScreen() {
   
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.connectionStatusContainer}>
+        <ConnectionStatus />
+      </View>
+      
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.header}>
           <Ionicons name="person-circle" size={80} color={colors.tint} />
@@ -124,6 +134,10 @@ export default function PlayerScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  connectionStatusContainer: {
+    padding: 16,
+    paddingBottom: 0,
   },
   scrollContent: {
     padding: 16,

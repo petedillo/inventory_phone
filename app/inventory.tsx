@@ -8,13 +8,19 @@ import Button from '@/components/ui/Button';
 import Loading from '@/components/ui/Loading';
 import EmptyState from '@/components/ui/EmptyState';
 import InventoryItem from '@/components/InventoryItem';
+import ConnectionStatus from '@/components/ui/ConnectionStatus';
 import { useGame } from '@/context/GameContext';
 
 export default function InventoryScreen() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
   const router = useRouter();
-  const { currentUser, inventory, refreshInventory, loading } = useGame();
+  const { 
+    currentUser, 
+    inventory, 
+    refreshInventory, 
+    loading
+  } = useGame();
   const [refreshing, setRefreshing] = React.useState(false);
   
   // Refresh inventory when the component mounts
@@ -59,6 +65,7 @@ export default function InventoryScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
+        <ConnectionStatus />
         <Button 
           title="Add Item" 
           onPress={handleAddItem}
@@ -104,7 +111,8 @@ const styles = StyleSheet.create({
   header: {
     padding: 16,
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   addButton: {
     minWidth: 120,

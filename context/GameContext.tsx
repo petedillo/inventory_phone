@@ -8,6 +8,7 @@ import {
   subscribeToInventory, 
   unsubscribeFromInventory, 
   disconnectSocket,
+  isSocketConnected,
   Item,
   User
 } from '../services/socket';
@@ -19,6 +20,7 @@ interface GameContextType {
   users: User[];
   inventory: Item[];
   loading: boolean;
+  socketConnected: boolean;
   
   // User actions
   fetchUsers: () => Promise<void>;
@@ -42,6 +44,10 @@ interface GameContextType {
   }) => Promise<void>;
   deleteItem: (itemId: string) => Promise<void>;
   refreshInventory: () => Promise<void>;
+  
+  // Socket actions
+  reconnectSocket: () => void;
+  disconnectSocketManually: () => void;
 }
 
 // Create context with default values
@@ -50,6 +56,7 @@ const GameContext = createContext<GameContextType>({
   users: [],
   inventory: [],
   loading: false,
+  socketConnected: false,
   
   fetchUsers: async () => {},
   selectUser: async () => {},
@@ -60,6 +67,9 @@ const GameContext = createContext<GameContextType>({
   updateItem: async () => {},
   deleteItem: async () => {},
   refreshInventory: async () => {},
+  
+  reconnectSocket: () => {},
+  disconnectSocketManually: () => {},
 });
 
 // Provider component
@@ -70,16 +80,42 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [inventory, setInventory] = useState<Item[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [socket, setSocket] = useState<Socket | null>(null);
+  const [socketConnected, setSocketConnected] = useState<boolean>(false);
   
   // Initialize socket when the provider mounts
   useEffect(() => {
-    const socketInstance = initSocket();
-    setSocket(socketInstance);
-    
-    // Cleanup on unmount
-    return () => {
-      disconnectSocket();
-    };
+    try {
+      const socketInstance = initSocket();
+      setSocket(socketInstance);
+      
+      // Update socket connection status
+      const updateConnectionStatus = () => {
+        setSocketConnected(isSocketConnected());
+      };
+      
+      // Check initial connection status
+      updateConnectionStatus();
+      
+      // Setup connection status listeners
+      socketInstance.on('connect', updateConnectionStatus);
+      socketInstance.on('disconnect', updateConnectionStatus);
+      socketInstance.on('connect_error', updateConnectionStatus);
+      socketInstance.on('reconnect', updateConnectionStatus);
+      socketInstance.on('reconnect_failed', updateConnectionStatus);
+      
+      // Cleanup on unmount
+      return () => {
+        socketInstance.off('connect', updateConnectionStatus);
+        socketInstance.off('disconnect', updateConnectionStatus);
+        socketInstance.off('connect_error', updateConnectionStatus);
+        socketInstance.off('reconnect', updateConnectionStatus);
+        socketInstance.off('reconnect_failed', updateConnectionStatus);
+        disconnectSocket();
+      };
+    } catch (error) {
+      console.error('Error initializing socket:', error);
+      setSocketConnected(false);
+    }
   }, []);
   
   // Setup WebSocket event listeners when socket or currentUser changes
@@ -322,12 +358,48 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
   
+  // Function to manually reconnect socket
+  const reconnectSocket = () => {
+    try {
+      const socketInstance = initSocket();
+      setSocket(socketInstance);
+      
+      if (currentUser) {
+        // Re-subscribe to inventory updates
+        subscribeToInventory(currentUser.id);
+        
+        // Refresh inventory data
+        refreshInventory();
+      }
+      
+      // Update connection status
+      setSocketConnected(isSocketConnected());
+    } catch (error) {
+      console.error('Error reconnecting socket:', error);
+    }
+  };
+  
+  // Function to manually disconnect socket
+  const disconnectSocketManually = () => {
+    try {
+      if (currentUser) {
+        unsubscribeFromInventory(currentUser.id);
+      }
+      
+      disconnectSocket();
+      setSocketConnected(false);
+    } catch (error) {
+      console.error('Error disconnecting socket:', error);
+    }
+  };
+  
   // Context value
   const value: GameContextType = {
     currentUser,
     users,
     inventory,
     loading,
+    socketConnected,
     
     fetchUsers,
     selectUser,
@@ -338,6 +410,9 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     updateItem,
     deleteItem,
     refreshInventory,
+    
+    reconnectSocket,
+    disconnectSocketManually,
   };
   
   return (
