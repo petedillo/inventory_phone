@@ -49,13 +49,6 @@ export default function AuthLayout() {
           headerShown: true,
         }}
       />
-      <Stack.Screen
-        name="discord"
-        options={{
-          title: 'Discord Login',
-          headerShown: false,
-        }}
-      />
     </Stack>
   );
 } 

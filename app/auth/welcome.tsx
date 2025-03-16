@@ -40,20 +40,6 @@ export default function WelcomeScreen() {
             onPress={() => router.push('/auth/register')}
             style={styles.button}
           />
-          
-          <View style={styles.separator}>
-            <View style={[styles.separatorLine, { backgroundColor: colors.border }]} />
-            <Text style={[styles.separatorText, { color: colors.icon }]}>OR</Text>
-            <View style={[styles.separatorLine, { backgroundColor: colors.border }]} />
-          </View>
-          
-          <Button
-            title="Continue with Discord"
-            variant="secondary"
-            onPress={() => router.push('/auth/discord')}
-            style={[styles.button, styles.discordButton]}
-            textStyle={{ color: '#5865F2' }}
-          />
         </View>
       </View>
     </SafeAreaView>
@@ -92,22 +78,5 @@ const styles = StyleSheet.create({
   },
   button: {
     marginBottom: 16,
-  },
-  discordButton: {
-    borderColor: '#5865F2',
-  },
-  separator: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 16,
-  },
-  separatorLine: {
-    flex: 1,
-    height: 1,
-  },
-  separatorText: {
-    marginHorizontal: 8,
-    fontSize: 14,
-    fontWeight: '600',
-  },
+  }
 }); 
