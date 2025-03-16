@@ -96,6 +96,7 @@ export default function LoginScreen() {
             autoCapitalize="none"
             error={errors.email}
             returnKeyType="next"
+            isEmail={true}
           />
           
           <Input
@@ -107,6 +108,7 @@ export default function LoginScreen() {
             error={errors.password}
             returnKeyType="done"
             onSubmitEditing={handleLogin}
+            isPassword={true}
           />
           
           <TouchableOpacity

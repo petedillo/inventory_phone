@@ -114,6 +114,7 @@ export default function RegisterScreen() {
             autoCapitalize="none"
             error={errors.username}
             returnKeyType="next"
+            isUsername={true}
           />
           
           <Input
@@ -125,6 +126,7 @@ export default function RegisterScreen() {
             autoCapitalize="none"
             error={errors.email}
             returnKeyType="next"
+            isEmail={true}
           />
           
           <View style={styles.row}>
@@ -155,6 +157,7 @@ export default function RegisterScreen() {
             secureTextEntry
             error={errors.password}
             returnKeyType="next"
+            isNewPassword={true}
           />
           
           <Input
@@ -166,6 +169,7 @@ export default function RegisterScreen() {
             error={errors.confirmPassword}
             returnKeyType="done"
             onSubmitEditing={handleRegister}
+            isNewPassword={true}
           />
           
           <Button

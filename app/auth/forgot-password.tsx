@@ -89,6 +89,7 @@ export default function ForgotPasswordScreen() {
             returnKeyType="done"
             onSubmitEditing={handleResetRequest}
             editable={!isSuccess}
+            isEmail={true}
           />
           
           <Button

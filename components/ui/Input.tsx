@@ -6,7 +6,8 @@ import {
   StyleSheet, 
   TextInputProps,
   ViewStyle,
-  TextStyle
+  TextStyle,
+  Platform
 } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -18,6 +19,10 @@ interface InputProps extends TextInputProps {
   labelStyle?: TextStyle;
   inputStyle?: TextStyle;
   errorStyle?: TextStyle;
+  isPassword?: boolean;
+  isNewPassword?: boolean;
+  isEmail?: boolean;
+  isUsername?: boolean;
 }
 
 export const Input: React.FC<InputProps> = ({
@@ -27,11 +32,30 @@ export const Input: React.FC<InputProps> = ({
   labelStyle,
   inputStyle,
   errorStyle,
+  isPassword = false,
+  isNewPassword = false,
+  isEmail = false,
+  isUsername = false,
   ...rest
 }) => {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
   const [isFocused, setIsFocused] = useState(false);
+  
+  // Determine the appropriate textContentType based on the input type
+  let textContentType: TextInputProps['textContentType'] = 'none';
+  
+  if (Platform.OS === 'ios') {
+    if (isPassword) {
+      textContentType = 'password';
+    } else if (isNewPassword) {
+      textContentType = 'newPassword';
+    } else if (isEmail) {
+      textContentType = 'emailAddress';
+    } else if (isUsername) {
+      textContentType = 'username';
+    }
+  }
   
   return (
     <View style={[styles.container, containerStyle]}>
@@ -53,6 +77,17 @@ export const Input: React.FC<InputProps> = ({
         placeholderTextColor={colors.placeholder}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
+        textContentType={textContentType}
+        autoComplete={
+          isPassword ? 'password' : 
+          isNewPassword ? 'new-password' : 
+          isEmail ? 'email' : 
+          isUsername ? 'username' : 
+          'off'
+        }
+        autoCapitalize={isEmail || isPassword || isNewPassword ? 'none' : undefined}
+        spellCheck={!(isPassword || isNewPassword)}
+        autoCorrect={!(isPassword || isNewPassword)}
         {...rest}
       />
       {error && (
